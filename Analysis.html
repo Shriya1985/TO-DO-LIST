@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Analysis</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom right, #b3ffab, #12fff7);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: center;
+            background-color: #333;
+            padding: 15px;
+        }
+
+        .navbar a {
+            color: white;
+            padding: 14px 20px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 1.2rem;
+        }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .container {
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .chart-container {
+            width: 60%;
+            margin: 15px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            font-size: 2rem;
+            text-align: center;
+            color: #fff;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="#" id="weeklyLink">Daily</a>
+        <a href="#" id="dailyLink">Weekly</a>
+        <a href="#" id="monthlyLink">Monthly</a>
+    </div>
+
+    <div class="header">Task Analysis</div>
+
+    <div class="container">
+        <div class="chart-container" id="weeklyChartContainer">
+            <canvas id="weeklyChart"></canvas>
+        </div>
+
+        <div class="chart-container" id="dailyChartContainer" style="display:none;">
+            <canvas id="dailyChart"></canvas>
+        </div>
+
+        <div class="chart-container" id="monthlyChartContainer" style="display:none;">
+            <canvas id="monthlyChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+        const taskData = {
+            daily: [3, 5, 2, 6, 4, 1, 7], // Tasks completed daily for the past week
+            weekly: [3, 2, 4, 1, 5, 3, 2, 6, 7, 4, 3, 5, 2, 4, 6, 3, 2, 5, 6, 7], // Hourly tasks completed for the past 24 hours
+            monthly: [15, 20, 18, 12, 16, 14, 18, 21, 24, 25, 30, 28]  // Monthly task completions
+        };
+
+        // Labels for the graph
+        const labels = {
+            daily: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            weekly: Array.from({ length: 24 }, (_, i) => `${i}:00`),  // Time slots for the 24 hours in a day
+            monthly: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        };
+
+        // Initialize charts
+        const ctxDaily = document.getElementById('dailyChart').getContext('2d');
+        const ctxWeekly = document.getElementById('weeklyChart').getContext('2d');
+        const ctxMonthly = document.getElementById('monthlyChart').getContext('2d');
+
+        // Daily Tasks Chart
+        const dailyChart = new Chart(ctxDaily, {
+            type: 'bar',
+            data: {
+                labels: labels.daily,
+                datasets: [{
+                    label: 'Tasks Completed',
+                    data: taskData.daily,
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Tasks'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Day of the Week'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Weekly Tasks Chart
+        const weeklyChart = new Chart(ctxWeekly, {
+            type: 'line',
+            data: {
+                labels: labels.weekly,
+                datasets: [{
+                    label: 'Tasks Completed per Hour',
+                    data: taskData.weekly,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    fill: true,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Tasks Completed'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time of Day'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Monthly Tasks Pie Chart
+        const monthlyChart = new Chart(ctxMonthly, {
+            type: 'pie',
+            data: {
+                labels: labels.monthly,
+                datasets: [{
+                    data: taskData.monthly,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 159, 64, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 255, 102, 0.6)',
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 159, 64, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(255, 206, 86, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 255, 102, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 206, 86, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return `${context.label}: ${context.raw} tasks`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Show the appropriate chart when the navbar link is clicked
+        document.getElementById("dailyLink").onclick = function() {
+            showChart('daily');
+        };
+
+        document.getElementById("weeklyLink").onclick = function() {
+            showChart('weekly');
+        };
+
+        document.getElementById("monthlyLink").onclick = function() {
+            showChart('monthly');
+        };
+
+        // Function to display the correct chart
+        function showChart(period) {
+            // Hide all charts
+            document.getElementById('dailyChartContainer').style.display = 'none';
+            document.getElementById('weeklyChartContainer').style.display = 'none';
+            document.getElementById('monthlyChartContainer').style.display = 'none';
+
+            // Show the selected chart
+            if (period === 'daily') {
+                document.getElementById('dailyChartContainer').style.display = 'block';
+            } else if (period === 'weekly') {
+                document.getElementById('weeklyChartContainer').style.display = 'block';
+            } else if (period === 'monthly') {
+                document.getElementById('monthlyChartContainer').style.display = 'block';
+            }
+        }
+
+        // Show weekly chart by default
+        showChart('weekly');
+    </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List - Welcome</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom right, #ffb3c1, #9c89b8);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            margin-top: 50px;
+            border-radius: 15px;
+            box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.2);
+            width: 95%;
+            max-width: 700px;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .description {
+            font-size: 1.2rem;
+            margin: 15px 0 30px 0;
+            color: #f3f3f3;
+            line-height: 1.8;
+        }
+
+        /* Buttons */
+        .buttons {
+            margin-top: 20px;
+        }
+
+        .btn {
+            font-size: 1.2rem;
+            margin: 10px;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .login {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .signup {
+            background-color: #2196f3;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Welcome to the To-Do List</h1>
+        <p class="description">
+            Organize your tasks effortlessly with our To-Do List app! Whether you're managing work, personal errands, or long-term goals, 
+            our intuitive platform helps you stay on track and boost productivity. <br><br>
+            Create, edit, and manage tasks with ease using our user-friendly interface. Stay motivated by setting reminders and tracking your progress. 
+            No matter how busy life gets, we've got you covered. <br><br>
+            Join us today and take the first step towards a more organized and productive life!
+        </p>
+        <div class="buttons">
+            <button id="loginButton" class="btn login">Login</button>
+            <button id="signupButton" class="btn signup">Signup</button>
+        </div>
+    </div>
+    <script>
+        // Redirect functionality for buttons
+        document.getElementById("loginButton").addEventListener("click", function() {
+            alert("Redirecting to Login Page..."); // Placeholder action
+            window.location.href = "login.html"; // Replace with your actual login page
+        });
+
+        document.getElementById("signupButton").addEventListener("click", function() {
+            alert("Redirecting to Signup Page..."); // Placeholder action
+            window.location.href = "signup.html"; // Replace with your actual signup page
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Timer</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom right, #fbc2eb, #a6c1ee);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .timer-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .timer {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #6c5b7b;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #fff;
+            background-color: #6c5b7b;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #5a4973;
+        }
+
+        .reset-btn {
+            background-color: #e74c3c;
+        }
+
+        .reset-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .set-timer {
+            margin-top: 20px;
+        }
+
+        .set-timer input {
+            width: 100px;
+            padding: 10px;
+            font-size: 1rem;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Focus Timer</div>
+    <div class="timer-container">
+        <!-- Timer Display -->
+        <div class="timer" id="timer">00:00</div>
+        
+        <!-- Timer Controls -->
+        <div class="controls">
+            <button onclick="startTimer()">Start</button>
+            <button onclick="pauseTimer()">Pause</button>
+            <button onclick="resetTimer()" class="reset-btn">Reset</button>
+        </div>
+        
+        <!-- Timer Input -->
+        <div class="set-timer">
+            <input type="number" id="timer-minutes" placeholder="Minutes" min="1">
+            <button onclick="setTimer()">Set Timer</button>
+        </div>
+    </div>
+
+    <script>
+        let countdown; // Timer interval
+        let remainingTime = 0; // Remaining time in seconds
+
+        // Function to start the timer
+        function startTimer() {
+            if (remainingTime > 0 && !countdown) {
+                countdown = setInterval(() => {
+                    remainingTime--;
+                    updateTimerDisplay();
+
+                    if (remainingTime <= 0) {
+                        clearInterval(countdown);
+                        countdown = null;
+                        alert("Time's up!");
+                    }
+                }, 1000);
+            }
+        }
+
+        // Function to pause the timer
+        function pauseTimer() {
+            clearInterval(countdown);
+            countdown = null;
+        }
+
+        // Function to reset the timer
+        function resetTimer() {
+            clearInterval(countdown);
+            countdown = null;
+            remainingTime = 0;
+            updateTimerDisplay();
+        }
+
+        // Function to set the timer
+        function setTimer() {
+            const minutesInput = document.getElementById("timer-minutes").value;
+            if (!minutesInput || minutesInput <= 0) {
+                alert("Please enter a valid number of minutes.");
+                return;
+            }
+
+            remainingTime = parseInt(minutesInput) * 60; // Convert minutes to seconds
+            updateTimerDisplay();
+        }
+
+        // Function to update the timer display
+        function updateTimerDisplay() {
+            const minutes = Math.floor(remainingTime / 60);
+            const seconds = remainingTime % 60;
+
+            document.getElementById("timer").textContent = 
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+    </script>
+</body>
+</html>

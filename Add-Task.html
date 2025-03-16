@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List - Add Tasks</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom right, #ffb3c1, #9c89b8);
+            color: #fff;
+        }
+
+        .header {
+            background-color: rgba(0, 0, 0, 0.8);
+            text-align: center;
+            padding: 20px;
+            font-size: 2rem;
+            color: #ffcccb;
+        }
+
+        .logout {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: #fff;
+            background-color: #e74c3c;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .logout:hover {
+            background-color: #c0392b;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            height: 80vh;
+            padding: 20px;
+            gap: 40px;
+        }
+
+        .task-form {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 40px;
+            border-radius: 10px;
+            width: 40%;
+            box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .task-form input,
+        .task-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .task-form button {
+            background-color: #2ecc71;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .task-form button:hover {
+            background-color: #27ae60;
+        }
+
+        .tasks-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 20px;
+            width: 55%;
+        }
+
+        .task-card {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px; /* Increased padding for more height */
+            border-radius: 10px;
+            width: 100%;
+            max-width: 250px;
+            min-height: 50px; /* Added a minimum height to make the card taller */
+            display: flex;
+            align-items: center; /* Align items in the center */
+            gap: 15px;
+            box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .task-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffcccb;
+        }
+
+        .task-description {
+            font-size: 1rem;
+            color: #ffc1c1;
+            flex: 1; /* Allow this to grow and take remaining space */
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <button class="logout" onclick="logout()">Logout</button>
+    <div class="header">Create and View Your Tasks</div>
+    <div class="container">
+        <!-- Task Form (Left side) -->
+        <div class="task-form">
+            <h2>Create New Task</h2>
+
+            <label for="task-name">Task Name</label>
+            <input type="text" id="task-name" name="task-name" required placeholder="Enter task name">
+
+            <label for="task-description">Task Description</label>
+            <textarea id="task-description" name="task-description" rows="4" required placeholder="Enter task description"></textarea>
+
+            <button type="submit" onclick="saveTask(event)">Add Task</button>
+        </div>
+
+        <!-- Task Cards Section (Right side) -->
+        <div class="tasks-container" id="tasks-container">
+            <!-- Tasks will be dynamically added here -->
+        </div>
+    </div>
+
+    <script>
+        window.onload = function () {
+            displayTasks();
+        };
+
+        function saveTask(event) {
+            event.preventDefault();
+
+            const taskName = document.getElementById('task-name').value;
+            const taskDescription = document.getElementById('task-description').value;
+
+            if (!taskName || !taskDescription) {
+                alert("Please fill in both Task Name and Task Description.");
+                return;
+            }
+
+            const task = {
+                name: taskName,
+                description: taskDescription,
+                completed: false,
+            };
+
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.push(task);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+
+            document.getElementById('task-name').value = '';
+            document.getElementById('task-description').value = '';
+            displayTasks();
+        }
+
+        function displayTasks() {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const tasksContainer = document.getElementById('tasks-container');
+            tasksContainer.innerHTML = '';
+
+            tasks.forEach((task, index) => {
+                const taskCard = document.createElement('div');
+                taskCard.classList.add('task-card');
+
+                // Create Checkbox
+                const taskCheckbox = document.createElement('input');
+                taskCheckbox.type = 'checkbox';
+                taskCheckbox.classList.add('task-checkbox');
+                taskCheckbox.checked = task.completed;
+                taskCheckbox.addEventListener('change', () => toggleTaskCompletion(index));
+
+                // Create Task Name
+                const taskName = document.createElement('div');
+                taskName.classList.add('task-name');
+                taskName.textContent = task.name;
+
+                // Create Task Description
+                const taskDescription = document.createElement('div');
+                taskDescription.classList.add('task-description');
+                taskDescription.textContent = task.description;
+
+                // Append all elements side by side
+                taskCard.appendChild(taskCheckbox);
+                taskCard.appendChild(taskName);
+                taskCard.appendChild(taskDescription);
+
+                tasksContainer.appendChild(taskCard);
+            });
+        }
+
+        function toggleTaskCompletion(index) {
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.splice(index, 1);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            displayTasks();
+        }
+
+        function logout() {
+            alert("You have been logged out.");
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+</html>
